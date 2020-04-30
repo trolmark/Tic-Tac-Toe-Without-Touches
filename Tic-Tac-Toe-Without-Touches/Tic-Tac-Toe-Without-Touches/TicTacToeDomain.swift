@@ -15,22 +15,26 @@ enum HorizontalPosition {
 }
 
 enum VerticalPosition {
-    case up
+    case top
     case vcenter
     case bottom
 }
 
-struct CellPosition {
+struct CellPosition: Equatable {
     let hPosition: HorizontalPosition
     let vPosition: VerticalPosition
+    
+    static func make(_ hPosition: HorizontalPosition, _ vPosition: VerticalPosition) -> Self {
+        return .init(hPosition: hPosition, vPosition: vPosition)
+    }
 }
 
-enum Player {
+enum Player: Equatable {
     case player0
     case playerX
 }
 
-enum CellState {
+enum CellState: Equatable {
     case played(Player)
     case empty
 }
@@ -42,7 +46,7 @@ struct Cell {
 
 enum MoveResult {
     case playerXToMove(display:[Cell], nextMove: [Cell])
-    case playerYToMove(display:[Cell], nextMove: [Cell])
+    case player0ToMove(display:[Cell], nextMove: [Cell])
     case gameWon(Player, [Cell])
     case gameTied([Cell])
 }
