@@ -12,9 +12,11 @@ import CoreMedia
 
 class ViewController: UIViewController {
     
+    private lazy var game: Game = .newGame()
+    
     private let stackView = UIStackView()
     private lazy var gameViewController : GameViewController = {
-        return GameViewController()
+        return GameViewController(game: game)
     }()
     private lazy var gestureDetectorController : GestureDetectorViewController = {
         return GestureDetectorViewController()

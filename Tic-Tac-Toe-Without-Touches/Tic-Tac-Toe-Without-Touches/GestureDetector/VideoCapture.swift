@@ -82,7 +82,7 @@ public class VideoCapture: NSObject {
     
     public func start() {
         if !captureSession.isRunning {
-            captureSession.startRunning()
+            //captureSession.startRunning()
         }
     }
     

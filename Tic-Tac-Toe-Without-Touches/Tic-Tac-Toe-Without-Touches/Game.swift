@@ -12,36 +12,36 @@ final class Game {
     typealias Line = [CellPosition]
     typealias GameState = [Cell]
     
-    private var gameState: GameState = []
-    private let allHorizPositions: [HorizontalPosition] = [.left, .hcenter, .right]
-    private let allVertPositions: [VerticalPosition] = [.top, .vcenter, .bottom]
-    
+    public private(set) var gameState: GameState = []
+    static let allHorizPositions: [HorizontalPosition] = [.left, .hcenter, .right]
+    static let allVertPositions: [VerticalPosition] = [.top, .vcenter, .bottom]
+        
     private init (gameState: GameState ) {
         self.gameState = gameState
     }
     
-    public func newGame() {
+    public static func newGame() -> Game {
         let allPositions: [CellPosition] = allHorizPositions.flatMap { hPos in
             return allVertPositions.map { vPos in
                 return .make(hPos, vPos)
             }
         }
         let emptyCells: [Cell] = allPositions.map { Cell(state: .empty, position: $0) }
-        self.gameState = emptyCells
+        return Game(gameState: emptyCells)
     }
 }
     
 private extension Game {
     
     func linesToCheck() -> [Line] {
-        let horizontal: [Line] = allHorizPositions.compactMap { hPos in
-            return allVertPositions.map { vPos in
+        let horizontal: [Line] = Game.allHorizPositions.compactMap { hPos in
+            return Game.allVertPositions.map { vPos in
                 return .make(hPos, vPos)
             }
         }
         
-        let vertical: [Line] = allVertPositions.compactMap { vPos in
-            return allHorizPositions.map { hPos in
+        let vertical: [Line] = Game.allVertPositions.compactMap { vPos in
+            return Game.allHorizPositions.map { hPos in
                 return .make(hPos, vPos)
             }
         }
@@ -124,7 +124,6 @@ private extension Game {
         }
     }
 }
-
 
 extension Game {
     

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B54D6A97245B1315005D8745 /* SquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A96245B1315005D8745 /* SquareView.swift */; };
+		B54D6A97245B1315005D8745 /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A96245B1315005D8745 /* CellView.swift */; };
 		B54D6A99245B1324005D8745 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A98245B1324005D8745 /* Game.swift */; };
 		B54D6A9B245B147D005D8745 /* TicTacToeDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9A245B147D005D8745 /* TicTacToeDomain.swift */; };
 		B5EB07512459B3BF00E4AF35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07502459B3BF00E4AF35 /* AppDelegate.swift */; };
@@ -22,7 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B54D6A96245B1315005D8745 /* SquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareView.swift; sourceTree = "<group>"; };
+		B54D6A96245B1315005D8745 /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
 		B54D6A98245B1324005D8745 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		B54D6A9A245B147D005D8745 /* TicTacToeDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacToeDomain.swift; sourceTree = "<group>"; };
 		B5EB074D2459B3BF00E4AF35 /* Tic-Tac-Toe-Without-Touches.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tic-Tac-Toe-Without-Touches.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,7 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				B5EB07692459B80500E4AF35 /* GameViewController.swift */,
-				B54D6A96245B1315005D8745 /* SquareView.swift */,
+				B54D6A96245B1315005D8745 /* CellView.swift */,
 			);
 			path = GameController;
 			sourceTree = "<group>";
@@ -176,7 +176,7 @@
 				B5EB07672459B72400E4AF35 /* GestureDetectorViewController.swift in Sources */,
 				B5EB07552459B3BF00E4AF35 /* ViewController.swift in Sources */,
 				B5EB07512459B3BF00E4AF35 /* AppDelegate.swift in Sources */,
-				B54D6A97245B1315005D8745 /* SquareView.swift in Sources */,
+				B54D6A97245B1315005D8745 /* CellView.swift in Sources */,
 				B54D6A9B245B147D005D8745 /* TicTacToeDomain.swift in Sources */,
 				B5EB076A2459B80500E4AF35 /* GameViewController.swift in Sources */,
 				B5EB07532459B3BF00E4AF35 /* SceneDelegate.swift in Sources */,
