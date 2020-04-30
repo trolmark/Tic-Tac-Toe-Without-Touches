@@ -11,4 +11,13 @@ import UIKit
 
 final class GameViewController: UIViewController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setUpUI()
+    }
+    
+    func setUpUI() {
+        self.view.backgroundColor = .blue
+    }
 }

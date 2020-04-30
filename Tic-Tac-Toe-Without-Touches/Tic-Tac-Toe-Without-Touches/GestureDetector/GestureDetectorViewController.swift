@@ -48,7 +48,7 @@ final class GestureDetectorViewController: UIViewController {
 extension GestureDetectorViewController {
     
     func setUpUI() {
-        
+        self.view.backgroundColor = .red
     }
         
     func setUpModel() {

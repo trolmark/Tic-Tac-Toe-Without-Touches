@@ -34,6 +34,7 @@ class ViewController: UIViewController {
         stackView.alignment = .fill
         stackView.spacing = 8.0
         stackView.axis = .vertical
+        stackView.distribution = .fillEqually
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
