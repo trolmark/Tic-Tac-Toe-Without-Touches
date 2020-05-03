@@ -154,16 +154,29 @@ private extension Game {
 
 extension Game {
     
+    public func aiPlayerMove() {
+        switch gameState {
+        case .player0ToMove(display: _, nextMove: let cells):
+            guard let cell = cells.randomElement() else { return }
+            playerMove(player: .player0, movePos: cell.position)
+        default:
+            break
+        }
+    }
+    
     public func playerMove(player: Player, movePos: CellPosition) {
         switch gameState {
         case .gameTied( _ ):
-            break
+            self.gameState = .playerXToMove(display: Game.emptyGameBoard, nextMove: Game.emptyGameBoard)
+            
         case .gameWon(_ , _):
-            break
+            self.gameState = .playerXToMove(display: Game.emptyGameBoard, nextMove: Game.emptyGameBoard)
+            
         case let .player0ToMove(display: cells, nextMove: nextMoves) where player == .player0:
             if nextMoves.contains(where: { $0.position == movePos }) {
                 gameState = playerMove(player: player, movePos: movePos, gameState: cells)
             }
+            
         case let.playerXToMove(display: cells, nextMove: nextMoves) where player == .playerX:
             if nextMoves.contains(where: { $0.position == movePos }) {
                 gameState = playerMove(player: player, movePos: movePos, gameState: cells)

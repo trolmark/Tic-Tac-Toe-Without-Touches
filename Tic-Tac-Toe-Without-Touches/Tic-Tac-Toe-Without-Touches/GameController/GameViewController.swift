@@ -86,16 +86,27 @@ final class GameViewController: UIViewController {
 
 extension GameViewController {
     
-    func cellViewForPosition(_ position: CellPosition, cellViews: [CellView]) -> CellView? {
+    func cellViewForPosition(_ position: CellPosition) -> CellView? {
         return cellViews.first(where: { $0.cell.position == position })
     }
-    
     
     public func cellViewPositionForPoint(point: CGPoint) -> CellPosition? {
         return cellViews.first { subview in
             let viewFrame = self.view.convert(subview.frame, from: subview.superview)
             return viewFrame.contains(point)
         }?.cell.position
+    }
+    
+    public func highlightView(atPosition position: CellPosition) {
+        let subview = cellViewForPosition(position)
+        let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn)
+        animator.addAnimations {
+            subview?.backgroundColor = UIColor.red.withAlphaComponent(0.2)
+        }
+        animator.addCompletion { _ in
+            subview?.backgroundColor = .white
+        }
+        animator.startAnimation()
     }
 }
 
@@ -104,7 +115,7 @@ extension GameViewController: GameStateChangeProtocol {
     func gameStateChanged(game: Game) {
         let cellState = game.cellState
         cellState.forEach { cell in
-            guard let cellView = self.cellViewForPosition(cell.position, cellViews: cellViews)
+            guard let cellView = self.cellViewForPosition(cell.position)
             else { return }
             cellView.cell = cell
         }

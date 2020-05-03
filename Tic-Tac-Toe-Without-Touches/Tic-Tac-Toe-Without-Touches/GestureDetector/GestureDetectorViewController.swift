@@ -60,8 +60,8 @@ extension GestureDetectorViewController {
         let constraints = [
             previewPrediction.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             previewPrediction.topAnchor.constraint(equalTo: view.topAnchor),
-            previewPrediction.heightAnchor.constraint(equalToConstant: 100),
-            previewPrediction.widthAnchor.constraint(equalToConstant: 100)
+            previewPrediction.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            previewPrediction.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -83,7 +83,6 @@ extension GestureDetectorViewController {
         videoCapture.setUp(sessionPreset: .vga640x480) { success in
             if success {
                 if let previewLayer = self.videoCapture.previewLayer {
-                    self.view.layer.addSublayer(previewLayer)
                     self.resizePreviewLayer()
                 }
                 self.videoCapture.start()
@@ -97,7 +96,6 @@ extension GestureDetectorViewController {
     }
     
     func resizePreviewLayer() {
-        videoCapture.previewLayer?.frame = view.bounds
         self.view.bringSubviewToFront(previewPrediction)
     }
 }

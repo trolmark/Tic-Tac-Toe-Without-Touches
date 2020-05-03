@@ -52,7 +52,7 @@ class ViewController: UIViewController {
             stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
-            
+        
         NSLayoutConstraint.activate(stackConstraints)
         
         addDisplayController(gestureDetectorController, to: stackView)
@@ -71,7 +71,13 @@ extension ViewController: GestureDetectorControllerDelegate {
     func gestureControllerDetectTap(atPosition position: CGPoint, gestureDetector: GestureDetectorViewController) {
         let point = gameViewController.view.convert(position, to: gameViewController.view)
         guard let position = gameViewController.cellViewPositionForPoint(point: point) else { return }
+        gameViewController.highlightView(atPosition: position)
+        
         game.playerMove(player: .playerX, movePos: position)
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.game.aiPlayerMove()
+        }
+
     }
 }
 
