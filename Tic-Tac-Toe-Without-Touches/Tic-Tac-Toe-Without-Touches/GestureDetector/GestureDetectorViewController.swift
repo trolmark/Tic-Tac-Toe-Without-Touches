@@ -12,7 +12,7 @@ import Vision
 import CoreMedia
 
 protocol GestureDetectorControllerDelegate: class {
-    func gestureControllerDetectTap(atPosition position: CellPosition, gestureDetector: GestureDetectorViewController)
+    func gestureControllerDetectTap(atPosition position: CGPoint, gestureDetector: GestureDetectorViewController)
 }
 
 final class GestureDetectorViewController: UIViewController {
@@ -137,6 +137,8 @@ extension GestureDetectorViewController: VideoCaptureDelegate {
                 tipPoint,
                 Int(self.view.bounds.size.width), Int(self.view.bounds.size.height)
             )
+            
+            self.delegate?.gestureControllerDetectTap(atPosition: imageFingerPoint, gestureDetector: self)
         }
     }
 }

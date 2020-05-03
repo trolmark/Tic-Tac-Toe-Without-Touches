@@ -31,7 +31,7 @@ final class GameViewController: UIViewController {
     
     func setUpUI() {
         
-        self.view.backgroundColor = .blue
+        self.view.backgroundColor = .white
         
         let cells = game.cellState
         
@@ -46,8 +46,6 @@ final class GameViewController: UIViewController {
         let bottomCells = cells
             .filter { $0.position.vPosition == .bottom }
             .map { CellView(cell: $0)}
-        
-        cellViews = topCells + centerCells + bottomCells
         
         let stackView = UIStackView(arrangedSubviews: [
             horizontalStack(topCells),
@@ -71,6 +69,8 @@ final class GameViewController: UIViewController {
         ]
         
         NSLayoutConstraint.activate(stackConstraints)
+        
+        cellViews = topCells + centerCells + bottomCells
     }
     
     func horizontalStack(_ cellViews: [CellView]) -> UIStackView {
@@ -90,6 +90,13 @@ extension GameViewController {
         return cellViews.first(where: { $0.cell.position == position })
     }
     
+    
+    public func cellViewPositionForPoint(point: CGPoint) -> CellPosition? {
+        return cellViews.first { subview in
+            let viewFrame = self.view.convert(subview.frame, from: subview.superview)
+            return viewFrame.contains(point)
+        }?.cell.position
+    }
 }
 
 extension GameViewController: GameStateChangeProtocol {

@@ -68,7 +68,9 @@ class ViewController: UIViewController {
     
 extension ViewController: GestureDetectorControllerDelegate {
     
-    func gestureControllerDetectTap(atPosition position: CellPosition, gestureDetector: GestureDetectorViewController) {
+    func gestureControllerDetectTap(atPosition position: CGPoint, gestureDetector: GestureDetectorViewController) {
+        let point = gameViewController.view.convert(position, to: gameViewController.view)
+        guard let position = gameViewController.cellViewPositionForPoint(point: point) else { return }
         game.playerMove(player: .playerX, movePos: position)
     }
 }
