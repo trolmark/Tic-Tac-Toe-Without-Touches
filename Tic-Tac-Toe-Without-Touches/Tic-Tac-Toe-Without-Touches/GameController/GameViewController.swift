@@ -33,7 +33,7 @@ final class GameViewController: UIViewController {
         
         self.view.backgroundColor = .blue
         
-        let cells = game.gameState
+        let cells = game.cellState
         
         let topCells = cells
             .filter { $0.position.vPosition == .top }
@@ -90,4 +90,16 @@ extension GameViewController {
         return cellViews.first(where: { $0.cell.position == position })
     }
     
+}
+
+extension GameViewController: GameStateChangeProtocol {
+    
+    func gameStateChanged(game: Game) {
+        let cellState = game.cellState
+        cellState.forEach { cell in
+            guard let cellView = self.cellViewForPosition(cell.position, cellViews: cellViews)
+            else { return }
+            cellView.cell = cell
+        }
+    }
 }

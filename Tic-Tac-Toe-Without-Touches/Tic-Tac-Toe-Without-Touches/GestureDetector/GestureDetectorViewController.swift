@@ -11,14 +11,18 @@ import Foundation
 import Vision
 import CoreMedia
 
+protocol GestureDetectorControllerDelegate: class {
+    func gestureControllerDetectTap(atPosition position: CellPosition, gestureDetector: GestureDetectorViewController)
+}
 
 final class GestureDetectorViewController: UIViewController {
     
+    
+    public weak var delegate: GestureDetectorControllerDelegate?
+    
     private var request: VNCoreMLRequest?
-    private var visionModel: VNCoreMLModel?
     private var isInferencing = false
     private let semaphore = DispatchSemaphore(value: 1)
-    private var predictions: [VNRecognizedObjectObservation] = []
     private var previewPrediction: UIImageView = .init(frame: .zero)
     
     private var videoCapture: VideoCapture!
@@ -65,7 +69,6 @@ extension GestureDetectorViewController {
         
     func setUpModel() {
         if let visionModel = try? VNCoreMLModel(for: HandModel().model) {
-            self.visionModel = visionModel
             request = VNCoreMLRequest(model: visionModel, completionHandler: visionRequestDidComplete)
             request?.imageCropAndScaleOption = .scaleFill
         } else {

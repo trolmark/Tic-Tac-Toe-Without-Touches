@@ -16,10 +16,15 @@ class ViewController: UIViewController {
     
     private let stackView = UIStackView()
     private lazy var gameViewController : GameViewController = {
-        return GameViewController(game: game)
+        let controller = GameViewController(game: game)
+        game.delegate = controller
+        return controller
     }()
+    
     private lazy var gestureDetectorController : GestureDetectorViewController = {
-        return GestureDetectorViewController()
+        let controller = GestureDetectorViewController()
+        controller.delegate = self
+        return controller
     }()
 
     override func viewDidLoad() {
@@ -61,5 +66,10 @@ class ViewController: UIViewController {
     }
 }
     
-
+extension ViewController: GestureDetectorControllerDelegate {
+    
+    func gestureControllerDetectTap(atPosition position: CellPosition, gestureDetector: GestureDetectorViewController) {
+        game.playerMove(player: .playerX, movePos: position)
+    }
+}
 

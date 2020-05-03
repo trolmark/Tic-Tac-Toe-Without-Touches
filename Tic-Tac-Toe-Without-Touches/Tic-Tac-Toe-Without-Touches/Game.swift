@@ -7,27 +7,54 @@
 //
 
 import Foundation
+import GameplayKit
+
+protocol GameStateChangeProtocol: class {
+    func gameStateChanged(game: Game)
+}
 
 final class Game {
     typealias Line = [CellPosition]
     typealias GameState = [Cell]
     
-    public private(set) var gameState: GameState = []
+    
+    public weak var delegate: GameStateChangeProtocol?
+
+    private var gameState: MoveResult {
+        didSet {
+            self.delegate?.gameStateChanged(game: self)
+        }
+    }
     static let allHorizPositions: [HorizontalPosition] = [.left, .hcenter, .right]
     static let allVertPositions: [VerticalPosition] = [.top, .vcenter, .bottom]
-        
-    private init (gameState: GameState ) {
-        self.gameState = gameState
-    }
-    
-    public static func newGame() -> Game {
-        let allPositions: [CellPosition] = allHorizPositions.flatMap { hPos in
+    static let emptyGameBoard: [Cell] = {
+       let allPositions: [CellPosition] = allHorizPositions.flatMap { hPos in
             return allVertPositions.map { vPos in
                 return .make(hPos, vPos)
             }
         }
-        let emptyCells: [Cell] = allPositions.map { Cell(state: .empty, position: $0) }
-        return Game(gameState: emptyCells)
+        return allPositions.map { Cell(state: .empty, position: $0) }
+    }()
+    
+    public var cellState: GameState {
+        switch gameState {
+        case .gameTied(let state):
+            return state
+        case .gameWon(_, let state):
+            return state
+        case .player0ToMove(display: let state, nextMove: _):
+            return state
+        case .playerXToMove(display: let state, nextMove: _):
+            return state
+        }
+    }
+        
+    private init (gameState: GameState ) {
+        self.gameState = .playerXToMove(display: gameState, nextMove: gameState)
+    }
+    
+    public static func newGame() -> Game {
+        return Game(gameState: Game.emptyGameBoard)
     }
 }
     
@@ -127,7 +154,26 @@ private extension Game {
 
 extension Game {
     
-    func playerMove(player: Player, movePos: CellPosition, gameState: GameState) -> MoveResult {
+    public func playerMove(player: Player, movePos: CellPosition) {
+        switch gameState {
+        case .gameTied( _ ):
+            break
+        case .gameWon(_ , _):
+            break
+        case let .player0ToMove(display: cells, nextMove: nextMoves) where player == .player0:
+            if nextMoves.contains(where: { $0.position == movePos }) {
+                gameState = playerMove(player: player, movePos: movePos, gameState: cells)
+            }
+        case let.playerXToMove(display: cells, nextMove: nextMoves) where player == .playerX:
+            if nextMoves.contains(where: { $0.position == movePos }) {
+                gameState = playerMove(player: player, movePos: movePos, gameState: cells)
+            }
+        default:
+            break
+        }
+    }
+    
+    private func playerMove(player: Player, movePos: CellPosition, gameState: GameState) -> MoveResult {
         let newCell: Cell = .init(state: .played(player), position: movePos)
         let newGameState = updateCell(newCell, gameState: gameState)
         
