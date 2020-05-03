@@ -10,6 +10,8 @@
 		B54D6A97245B1315005D8745 /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A96245B1315005D8745 /* CellView.swift */; };
 		B54D6A99245B1324005D8745 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A98245B1324005D8745 /* Game.swift */; };
 		B54D6A9B245B147D005D8745 /* TicTacToeDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9A245B147D005D8745 /* TicTacToeDomain.swift */; };
+		B54D6A9D245E9938005D8745 /* HandModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9C245E9938005D8745 /* HandModel.mlmodel */; };
+		B54D6A9F245E9E7B005D8745 /* CVPixelBuffer+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9E245E9E7B005D8745 /* CVPixelBuffer+Search.swift */; };
 		B5EB07512459B3BF00E4AF35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07502459B3BF00E4AF35 /* AppDelegate.swift */; };
 		B5EB07532459B3BF00E4AF35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07522459B3BF00E4AF35 /* SceneDelegate.swift */; };
 		B5EB07552459B3BF00E4AF35 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07542459B3BF00E4AF35 /* ViewController.swift */; };
@@ -25,6 +27,8 @@
 		B54D6A96245B1315005D8745 /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
 		B54D6A98245B1324005D8745 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		B54D6A9A245B147D005D8745 /* TicTacToeDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacToeDomain.swift; sourceTree = "<group>"; };
+		B54D6A9C245E9938005D8745 /* HandModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandModel.mlmodel; sourceTree = "<group>"; };
+		B54D6A9E245E9E7B005D8745 /* CVPixelBuffer+Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Search.swift"; sourceTree = "<group>"; };
 		B5EB074D2459B3BF00E4AF35 /* Tic-Tac-Toe-Without-Touches.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tic-Tac-Toe-Without-Touches.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5EB07502459B3BF00E4AF35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5EB07522459B3BF00E4AF35 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +90,8 @@
 		B5EB07682459B7A600E4AF35 /* GestureDetector */ = {
 			isa = PBXGroup;
 			children = (
+				B54D6A9E245E9E7B005D8745 /* CVPixelBuffer+Search.swift */,
+				B54D6A9C245E9938005D8745 /* HandModel.mlmodel */,
 				B5EB07662459B72400E4AF35 /* GestureDetectorViewController.swift */,
 				B5EB07642459B44F00E4AF35 /* VideoCapture.swift */,
 			);
@@ -180,7 +186,9 @@
 				B54D6A9B245B147D005D8745 /* TicTacToeDomain.swift in Sources */,
 				B5EB076A2459B80500E4AF35 /* GameViewController.swift in Sources */,
 				B5EB07532459B3BF00E4AF35 /* SceneDelegate.swift in Sources */,
+				B54D6A9F245E9E7B005D8745 /* CVPixelBuffer+Search.swift in Sources */,
 				B54D6A99245B1324005D8745 /* Game.swift in Sources */,
+				B54D6A9D245E9938005D8745 /* HandModel.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,7 +264,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -310,7 +318,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

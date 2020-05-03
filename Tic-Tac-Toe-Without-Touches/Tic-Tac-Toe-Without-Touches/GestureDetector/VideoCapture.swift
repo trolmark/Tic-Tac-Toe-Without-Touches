@@ -39,7 +39,7 @@ public class VideoCapture: NSObject {
         
         guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                           for: .video,
-                                                          position: .back) else {
+                                                          position: .front) else {
             
             print("Error: no video devices available")
             return
@@ -55,7 +55,7 @@ public class VideoCapture: NSObject {
         }
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         previewLayer.connection?.videoOrientation = .portrait
         self.previewLayer = previewLayer
         
@@ -82,7 +82,7 @@ public class VideoCapture: NSObject {
     
     public func start() {
         if !captureSession.isRunning {
-            //captureSession.startRunning()
+            captureSession.startRunning()
         }
     }
     
@@ -108,6 +108,5 @@ extension VideoCapture: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     public func captureOutput(_ output: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        //print("dropped frame")
     }
 }

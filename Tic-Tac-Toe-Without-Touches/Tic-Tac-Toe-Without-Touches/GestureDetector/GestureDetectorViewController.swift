@@ -19,6 +19,7 @@ final class GestureDetectorViewController: UIViewController {
     private var isInferencing = false
     private let semaphore = DispatchSemaphore(value: 1)
     private var predictions: [VNRecognizedObjectObservation] = []
+    private var previewPrediction: UIImageView = .init(frame: .zero)
     
     private var videoCapture: VideoCapture!
    
@@ -48,17 +49,28 @@ final class GestureDetectorViewController: UIViewController {
 extension GestureDetectorViewController {
     
     func setUpUI() {
-        self.view.backgroundColor = .red
+        self.view.backgroundColor = .white
+        self.previewPrediction.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.previewPrediction)
+        
+        let constraints = [
+            previewPrediction.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            previewPrediction.topAnchor.constraint(equalTo: view.topAnchor),
+            previewPrediction.heightAnchor.constraint(equalToConstant: 100),
+            previewPrediction.widthAnchor.constraint(equalToConstant: 100)
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
     }
         
     func setUpModel() {
-//        if let visionModel = try? VNCoreMLModel(for: objectDectectionModel.model) {
-//            self.visionModel = visionModel
-//            request = VNCoreMLRequest(model: visionModel, completionHandler: visionRequestDidComplete)
-//            request?.imageCropAndScaleOption = .scaleFill
-//        } else {
-//            fatalError("fail to create vision model")
-//        }
+        if let visionModel = try? VNCoreMLModel(for: HandModel().model) {
+            self.visionModel = visionModel
+            request = VNCoreMLRequest(model: visionModel, completionHandler: visionRequestDidComplete)
+            request?.imageCropAndScaleOption = .scaleFill
+        } else {
+            fatalError("fail to create vision model")
+        }
     }
     
     func setUpCamera() {
@@ -83,6 +95,7 @@ extension GestureDetectorViewController {
     
     func resizePreviewLayer() {
         videoCapture.previewLayer?.frame = view.bounds
+        self.view.bringSubviewToFront(previewPrediction)
     }
 }
 
@@ -99,21 +112,28 @@ extension GestureDetectorViewController: VideoCaptureDelegate {
     func predictUsingVision(pixelBuffer: CVPixelBuffer) {
         guard let request = request else { fatalError() }
         self.semaphore.wait()
-        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer)
+        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .upMirrored)
         try? handler.perform([request])
     }
     
     func visionRequestDidComplete(request: VNRequest, error: Error?) {
-        if let predictions = request.results as? [VNRecognizedObjectObservation] {
-            //            print(predictions.first?.labels.first?.identifier ?? "nil")
-            //            print(predictions.first?.labels.first?.confidence ?? -1)
-            self.predictions = predictions
-            DispatchQueue.main.async {
-                self.isInferencing = false
-            }
-        } else {
-            self.isInferencing = false
+        guard let observation = request.results?.first as? VNPixelBufferObservation else {
+            fatalError("Unexpected result type from VNCoreMLRequest")
         }
-        self.semaphore.signal()
+        
+        defer {
+            self.isInferencing = false
+            self.semaphore.signal()
+        }
+
+        DispatchQueue.main.async {
+            self.previewPrediction.image = UIImage(ciImage: CIImage(cvPixelBuffer: observation.pixelBuffer))
+            guard let tipPoint = observation.pixelBuffer.topWhitePoint() else { return }
+        
+            let imageFingerPoint = VNImagePointForNormalizedPoint(
+                tipPoint,
+                Int(self.view.bounds.size.width), Int(self.view.bounds.size.height)
+            )
+        }
     }
 }

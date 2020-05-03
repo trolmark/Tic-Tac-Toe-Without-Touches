@@ -86,5 +86,8 @@ final class GameViewController: UIViewController {
 
 extension GameViewController {
     
+    func cellViewForPosition(_ position: CellPosition, cellViews: [CellView]) -> CellView? {
+        return cellViews.first(where: { $0.cell.position == position })
+    }
     
 }
