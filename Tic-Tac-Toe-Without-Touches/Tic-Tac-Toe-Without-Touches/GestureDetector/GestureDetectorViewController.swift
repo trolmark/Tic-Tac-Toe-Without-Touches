@@ -24,7 +24,7 @@ final class GestureDetectorViewController: UIViewController {
     private var isInferencing = false
     private let semaphore = DispatchSemaphore(value: 1)
     private var previewPrediction: UIImageView = .init(frame: .zero)
-    
+   
     private var videoCapture: VideoCapture!
    
     override func viewDidLoad() {
@@ -82,9 +82,6 @@ extension GestureDetectorViewController {
         videoCapture.fps = 30
         videoCapture.setUp(sessionPreset: .vga640x480) { success in
             if success {
-                if let previewLayer = self.videoCapture.previewLayer {
-                    self.resizePreviewLayer()
-                }
                 self.videoCapture.start()
             }
         }
@@ -112,6 +109,8 @@ extension GestureDetectorViewController: VideoCaptureDelegate {
     
     func predictUsingVision(pixelBuffer: CVPixelBuffer) {
         guard let request = request else { fatalError() }
+    
+
         self.semaphore.wait()
         let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .upMirrored)
         try? handler.perform([request])
