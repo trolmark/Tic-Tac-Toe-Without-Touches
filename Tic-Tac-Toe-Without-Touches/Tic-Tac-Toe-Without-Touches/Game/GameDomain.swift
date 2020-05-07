@@ -50,3 +50,16 @@ enum MoveResult {
     case gameWon(Player, [Cell])
     case gameTied([Cell])
 }
+
+
+extension Player {
+    
+    var textValue: String {
+        switch self {
+        case .player0:
+            return "AI"
+        case .playerX:
+            return "User"
+        }
+    }
+}

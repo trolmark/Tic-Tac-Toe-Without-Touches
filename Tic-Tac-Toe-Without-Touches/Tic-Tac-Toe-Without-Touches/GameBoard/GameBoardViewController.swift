@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-final class GameViewController: UIViewController {
+final class GameBoardViewController: UIViewController {
     
     private var cellViews: [CellView] = []
-    public var game: Game
+    public var initialState: [Cell]
     
-    init(game: Game) {
-        self.game = game
+    init(gameState: [Cell]) {
+        self.initialState = gameState
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -25,25 +25,22 @@ final class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setUpUI()
-    }
-    
-    func setUpUI() {
-        
         self.view.backgroundColor = .white
         
-        let cells = game.cellState
-        
-        let topCells = cells
+        setUpUI(initialState)
+    }
+    
+    func setUpUI(_ gameState: [Cell]) {
+    
+        let topCells = gameState
             .filter { $0.position.vPosition == .top }
             .map { CellView(cell: $0)}
         
-        let centerCells = cells
+        let centerCells = gameState
             .filter { $0.position.vPosition == .vcenter }
             .map { CellView(cell: $0)}
         
-        let bottomCells = cells
+        let bottomCells = gameState
             .filter { $0.position.vPosition == .bottom }
             .map { CellView(cell: $0)}
         
@@ -84,40 +81,45 @@ final class GameViewController: UIViewController {
     }
 }
 
-extension GameViewController {
+extension GameBoardViewController {
     
     func cellViewForPosition(_ position: CellPosition) -> CellView? {
         return cellViews.first(where: { $0.cell.position == position })
     }
     
-    public func cellViewPositionForPoint(point: CGPoint) -> CellPosition? {
+    public func cellViewPositionForPoint(_ point: CGPoint) -> CellPosition? {
+        let tapPoint = self.view.convert(point, to: self.view)
         return cellViews.first { subview in
             let viewFrame = self.view.convert(subview.frame, from: subview.superview)
-            return viewFrame.contains(point)
+            return viewFrame.contains(tapPoint)
         }?.cell.position
-    }
-    
-    public func highlightView(atPosition position: CellPosition) {
-        let subview = cellViewForPosition(position)
-        let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn)
-        animator.addAnimations {
-            subview?.backgroundColor = UIColor.red.withAlphaComponent(0.2)
-        }
-        animator.addCompletion { _ in
-            subview?.backgroundColor = .white
-        }
-        animator.startAnimation()
     }
 }
 
-extension GameViewController: GameStateChangeProtocol {
+extension GameBoardViewController: GameStateChangeObserver {
     
     func gameStateChanged(game: Game) {
         let cellState = game.cellState
         cellState.forEach { cell in
             guard let cellView = self.cellViewForPosition(cell.position)
             else { return }
+            if cellView.cell.state != cell.state, cell.state != .empty {
+                highlight(cellView: cellView)
+            }
             cellView.cell = cell
         }
+    }
+    
+    private func highlight(cellView: CellView) {
+        let animator = UIViewPropertyAnimator(duration: 0.1, curve: .easeIn)
+        animator.addAnimations {
+            cellView.backgroundColor = UIColor.gray.withAlphaComponent(0.2)
+            cellView.transform = .init(scaleX: 1.1, y: 1.1)
+        }
+        animator.addCompletion { _ in
+            cellView.backgroundColor = .white
+            cellView.transform = .identity
+        }
+        animator.startAnimation()
     }
 }

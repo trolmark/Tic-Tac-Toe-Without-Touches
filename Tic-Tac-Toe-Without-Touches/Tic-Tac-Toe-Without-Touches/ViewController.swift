@@ -12,12 +12,17 @@ import CoreMedia
 
 class ViewController: UIViewController {
     
-    private lazy var game: Game = .newGame()
+    private struct ColorConstants {
+        static let gameFinishedColor = UIColor.init(red: 46 / 255, green: 139/255, blue: 87/255, alpha: 1.0)
+        static let playerMoveColor = UIColor.gray.withAlphaComponent(0.5)
+    }
     
-    private let stackView = UIStackView()
-    private lazy var gameViewController : GameViewController = {
-        let controller = GameViewController(game: game)
-        game.delegate = controller
+    private lazy var game: Game = .newGame()
+    private var turnAllowed: Bool = true
+    
+    private lazy var gameBoardViewController : GameBoardViewController = {
+        let controller = GameBoardViewController(gameState: game.cellState)
+        game.addObserver(controller)
         return controller
     }()
     
@@ -26,22 +31,31 @@ class ViewController: UIViewController {
         controller.delegate = self
         return controller
     }()
+    
+    private lazy var statusView: UILabel =  {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUpUI()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+        game.addObserver(self)
     }
     
     func setUpUI() {
+        let stackView = UIStackView(arrangedSubviews: [
+            gestureDetectorController.view,
+            statusView,
+            gameBoardViewController.view
+        ])
         stackView.alignment = .fill
-        stackView.spacing = 8.0
         stackView.axis = .vertical
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fill
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
@@ -49,35 +63,62 @@ class ViewController: UIViewController {
         let stackConstraints = [
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
         
-        NSLayoutConstraint.activate(stackConstraints)
+        let subviewConstraints = [
+            gestureDetectorController.view.heightAnchor.constraint(equalTo: gameBoardViewController.view.heightAnchor),
+            statusView.heightAnchor.constraint(equalToConstant: 40)
+        ]
         
-        addDisplayController(gestureDetectorController, to: stackView)
-        addDisplayController(gameViewController, to: stackView)
-    }
-    
-    private func addDisplayController(_ child: UIViewController, to stackView: UIStackView) {
-        addChild(child)
-        stackView.addArrangedSubview(child.view)
-        child.didMove(toParent: self)
+        NSLayoutConstraint.activate(stackConstraints + subviewConstraints)
     }
 }
     
 extension ViewController: GestureDetectorControllerDelegate {
     
-    func gestureControllerDetectTap(atPosition position: CGPoint, gestureDetector: GestureDetectorViewController) {
-        let point = gameViewController.view.convert(position, to: gameViewController.view)
-        guard let position = gameViewController.cellViewPositionForPoint(point: point) else { return }
-        gameViewController.highlightView(atPosition: position)
+    func gestureControllerDetectTap(atPoint point: CGPoint, gestureDetector: GestureDetectorViewController) {
+        guard let position = gameBoardViewController.cellViewPositionForPoint(point) else { return }
+        makeTurn(turn: position)
+    }
+    
+    func makeTurn(turn: CellPosition) {
+        guard turnAllowed else { return }
+        turnAllowed = false
         
-        game.playerMove(player: .playerX, movePos: position)
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            self.game.aiPlayerMove()
+        game.playerMove(player: .playerX, movePos: turn)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            // Make simple strategy for AI :  pick random position from allowed moves
+            let moves = self.game.availableMoves(forPlayer: .player0)
+            guard let aiPosition = moves.randomElement() else { return }
+            self.game.playerMove(player: .player0, movePos: aiPosition)
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.turnAllowed = true
+        }
+    }
+}
 
+extension ViewController: GameStateChangeObserver {
+
+    func gameStateChanged(game: Game) {
+        switch game.gameState {
+        case .gameTied:
+            statusView.backgroundColor = ColorConstants.gameFinishedColor
+            statusView.text = "Game Tied"
+        case .gameWon(let player, _):
+            statusView.backgroundColor = ColorConstants.gameFinishedColor
+            statusView.text = "Game won by \(player.textValue)"
+        case .player0ToMove:
+            statusView.backgroundColor = ColorConstants.playerMoveColor
+            statusView.text = "AI turn"
+        case .playerXToMove:
+            statusView.backgroundColor = ColorConstants.playerMoveColor
+            statusView.text = "User turn"
+        }
     }
 }
 

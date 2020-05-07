@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		B54D6A97245B1315005D8745 /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A96245B1315005D8745 /* CellView.swift */; };
 		B54D6A99245B1324005D8745 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A98245B1324005D8745 /* Game.swift */; };
-		B54D6A9B245B147D005D8745 /* TicTacToeDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9A245B147D005D8745 /* TicTacToeDomain.swift */; };
+		B54D6A9B245B147D005D8745 /* GameDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9A245B147D005D8745 /* GameDomain.swift */; };
 		B54D6A9D245E9938005D8745 /* HandModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9C245E9938005D8745 /* HandModel.mlmodel */; };
 		B54D6A9F245E9E7B005D8745 /* CVPixelBuffer+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D6A9E245E9E7B005D8745 /* CVPixelBuffer+Search.swift */; };
 		B5EB07512459B3BF00E4AF35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07502459B3BF00E4AF35 /* AppDelegate.swift */; };
@@ -20,13 +20,13 @@
 		B5EB075D2459B3C100E4AF35 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5EB075B2459B3C100E4AF35 /* LaunchScreen.storyboard */; };
 		B5EB07652459B44F00E4AF35 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07642459B44F00E4AF35 /* VideoCapture.swift */; };
 		B5EB07672459B72400E4AF35 /* GestureDetectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07662459B72400E4AF35 /* GestureDetectorViewController.swift */; };
-		B5EB076A2459B80500E4AF35 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07692459B80500E4AF35 /* GameViewController.swift */; };
+		B5EB076A2459B80500E4AF35 /* GameBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EB07692459B80500E4AF35 /* GameBoardViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B54D6A96245B1315005D8745 /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
 		B54D6A98245B1324005D8745 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
-		B54D6A9A245B147D005D8745 /* TicTacToeDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacToeDomain.swift; sourceTree = "<group>"; };
+		B54D6A9A245B147D005D8745 /* GameDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDomain.swift; sourceTree = "<group>"; };
 		B54D6A9C245E9938005D8745 /* HandModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandModel.mlmodel; sourceTree = "<group>"; };
 		B54D6A9E245E9E7B005D8745 /* CVPixelBuffer+Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Search.swift"; sourceTree = "<group>"; };
 		B5EB074D2459B3BF00E4AF35 /* Tic-Tac-Toe-Without-Touches.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tic-Tac-Toe-Without-Touches.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,7 +39,7 @@
 		B5EB075E2459B3C100E4AF35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5EB07642459B44F00E4AF35 /* VideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
 		B5EB07662459B72400E4AF35 /* GestureDetectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureDetectorViewController.swift; sourceTree = "<group>"; };
-		B5EB07692459B80500E4AF35 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		B5EB07692459B80500E4AF35 /* GameBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +53,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B58F09E22464526E00946493 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				B54D6A98245B1324005D8745 /* Game.swift */,
+				B54D6A9A245B147D005D8745 /* GameDomain.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
 		B5EB07442459B3BF00E4AF35 = {
 			isa = PBXGroup;
 			children = (
@@ -72,13 +81,12 @@
 		B5EB074F2459B3BF00E4AF35 /* Tic-Tac-Toe-Without-Touches */ = {
 			isa = PBXGroup;
 			children = (
-				B5EB076B2459B83E00E4AF35 /* GameController */,
+				B58F09E22464526E00946493 /* Game */,
+				B5EB076B2459B83E00E4AF35 /* GameBoard */,
 				B5EB07682459B7A600E4AF35 /* GestureDetector */,
 				B5EB07502459B3BF00E4AF35 /* AppDelegate.swift */,
-				B5EB07522459B3BF00E4AF35 /* SceneDelegate.swift */,
-				B54D6A9A245B147D005D8745 /* TicTacToeDomain.swift */,
-				B54D6A98245B1324005D8745 /* Game.swift */,
 				B5EB07542459B3BF00E4AF35 /* ViewController.swift */,
+				B5EB07522459B3BF00E4AF35 /* SceneDelegate.swift */,
 				B5EB07562459B3BF00E4AF35 /* Main.storyboard */,
 				B5EB07592459B3C100E4AF35 /* Assets.xcassets */,
 				B5EB075B2459B3C100E4AF35 /* LaunchScreen.storyboard */,
@@ -98,13 +106,13 @@
 			path = GestureDetector;
 			sourceTree = "<group>";
 		};
-		B5EB076B2459B83E00E4AF35 /* GameController */ = {
+		B5EB076B2459B83E00E4AF35 /* GameBoard */ = {
 			isa = PBXGroup;
 			children = (
-				B5EB07692459B80500E4AF35 /* GameViewController.swift */,
+				B5EB07692459B80500E4AF35 /* GameBoardViewController.swift */,
 				B54D6A96245B1315005D8745 /* CellView.swift */,
 			);
-			path = GameController;
+			path = GameBoard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,8 +191,8 @@
 				B5EB07552459B3BF00E4AF35 /* ViewController.swift in Sources */,
 				B5EB07512459B3BF00E4AF35 /* AppDelegate.swift in Sources */,
 				B54D6A97245B1315005D8745 /* CellView.swift in Sources */,
-				B54D6A9B245B147D005D8745 /* TicTacToeDomain.swift in Sources */,
-				B5EB076A2459B80500E4AF35 /* GameViewController.swift in Sources */,
+				B54D6A9B245B147D005D8745 /* GameDomain.swift in Sources */,
+				B5EB076A2459B80500E4AF35 /* GameBoardViewController.swift in Sources */,
 				B5EB07532459B3BF00E4AF35 /* SceneDelegate.swift in Sources */,
 				B54D6A9F245E9E7B005D8745 /* CVPixelBuffer+Search.swift in Sources */,
 				B54D6A99245B1324005D8745 /* Game.swift in Sources */,

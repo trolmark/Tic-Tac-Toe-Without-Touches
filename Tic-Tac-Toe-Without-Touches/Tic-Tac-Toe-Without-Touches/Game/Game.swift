@@ -9,7 +9,7 @@
 import Foundation
 import GameplayKit
 
-protocol GameStateChangeProtocol: class {
+protocol GameStateChangeObserver: class {
     func gameStateChanged(game: Game)
 }
 
@@ -17,14 +17,13 @@ final class Game {
     typealias Line = [CellPosition]
     typealias GameState = [Cell]
     
-    
-    public weak var delegate: GameStateChangeProtocol?
-
-    private var gameState: MoveResult {
+    public private(set) var gameState: MoveResult {
         didSet {
-            self.delegate?.gameStateChanged(game: self)
+            stateDidChanged()
         }
     }
+    private var observations = [ObjectIdentifier : Observation]()
+    
     static let allHorizPositions: [HorizontalPosition] = [.left, .hcenter, .right]
     static let allVertPositions: [VerticalPosition] = [.top, .vcenter, .bottom]
     static let emptyGameBoard: [Cell] = {
@@ -49,7 +48,7 @@ final class Game {
         }
     }
         
-    private init (gameState: GameState ) {
+    private init (gameState: GameState) {
         self.gameState = .playerXToMove(display: gameState, nextMove: gameState)
     }
     
@@ -150,17 +149,38 @@ private extension Game {
             return oldCell
         }
     }
+    
+    private func playerMove(player: Player, movePos: CellPosition, gameState: GameState) -> MoveResult {
+        let newCell: Cell = .init(state: .played(player), position: movePos)
+        let newGameState = updateCell(newCell, gameState: gameState)
+        
+        if isGameWon(by: player, gameState: newGameState) {
+            return .gameWon(player, newGameState)
+        } else if isGameTied(gameState: newGameState) {
+            return .gameTied(newGameState)
+        } else {
+            let other = otherPlayer(player)
+            let availableMoves = remainingMoves(gameState: newGameState)
+            switch other {
+            case .player0:
+                return .player0ToMove(display: newGameState, nextMove: availableMoves)
+            case .playerX:
+                return .playerXToMove(display: newGameState, nextMove: availableMoves)
+            }
+        }
+    }
 }
 
 extension Game {
     
-    public func aiPlayerMove() {
+    public func availableMoves(forPlayer player: Player) -> [CellPosition] {
         switch gameState {
-        case .player0ToMove(display: _, nextMove: let cells):
-            guard let cell = cells.randomElement() else { return }
-            playerMove(player: .player0, movePos: cell.position)
+        case .player0ToMove(display: _, nextMove: let cellsToMove) where player == .player0:
+            return cellsToMove.map { $0.position }
+        case .playerXToMove(display: _, nextMove: let cellsToMove) where player == .playerX:
+            return cellsToMove.map { $0.position }
         default:
-            break
+            return []
         }
     }
     
@@ -185,24 +205,34 @@ extension Game {
             break
         }
     }
+}
+
+private extension Game {
+
+    struct Observation {
+        weak var observer: GameStateChangeObserver?
+    }
     
-    private func playerMove(player: Player, movePos: CellPosition, gameState: GameState) -> MoveResult {
-        let newCell: Cell = .init(state: .played(player), position: movePos)
-        let newGameState = updateCell(newCell, gameState: gameState)
-        
-        if isGameWon(by: player, gameState: newGameState) {
-            return .gameWon(player, newGameState)
-        } else if isGameTied(gameState: newGameState) {
-            return .gameTied(newGameState)
-        } else {
-            let other = otherPlayer(player)
-            let availableMoves = remainingMoves(gameState: newGameState)
-            switch other {
-            case .player0:
-                return .player0ToMove(display: newGameState, nextMove: availableMoves)
-            case .playerX:
-                return .playerXToMove(display: newGameState, nextMove: availableMoves)
+    func stateDidChanged() {
+        for (id, observation) in observations {
+            guard let observer = observation.observer else {
+                observations.removeValue(forKey: id)
+                continue
             }
+            observer.gameStateChanged(game: self)
         }
+    }
+}
+
+extension Game {
+    
+    func addObserver(_ observer: GameStateChangeObserver) {
+        let id = ObjectIdentifier(observer)
+        observations[id] = Observation(observer: observer)
+    }
+
+    func removeObserver(_ observer: GameStateChangeObserver) {
+        let id = ObjectIdentifier(observer)
+        observations.removeValue(forKey: id)
     }
 }

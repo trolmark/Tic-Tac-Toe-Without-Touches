@@ -12,11 +12,10 @@ import Vision
 import CoreMedia
 
 protocol GestureDetectorControllerDelegate: class {
-    func gestureControllerDetectTap(atPosition position: CGPoint, gestureDetector: GestureDetectorViewController)
+    func gestureControllerDetectTap(atPoint point: CGPoint, gestureDetector: GestureDetectorViewController)
 }
 
 final class GestureDetectorViewController: UIViewController {
-    
     
     public weak var delegate: GestureDetectorControllerDelegate?
     
@@ -33,10 +32,6 @@ final class GestureDetectorViewController: UIViewController {
         setUpUI()
         setUpModel()
         setUpCamera()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,7 +75,7 @@ extension GestureDetectorViewController {
         videoCapture = VideoCapture()
         videoCapture.delegate = self
         videoCapture.fps = 30
-        videoCapture.setUp(sessionPreset: .vga640x480) { success in
+        videoCapture.setUp(sessionPreset: .cif352x288) { success in
             if success {
                 self.videoCapture.start()
             }
@@ -135,7 +130,7 @@ extension GestureDetectorViewController: VideoCaptureDelegate {
                 Int(self.view.bounds.size.width), Int(self.view.bounds.size.height)
             )
             
-            self.delegate?.gestureControllerDetectTap(atPosition: imageFingerPoint, gestureDetector: self)
+            self.delegate?.gestureControllerDetectTap(atPoint: imageFingerPoint, gestureDetector: self)
         }
     }
 }
