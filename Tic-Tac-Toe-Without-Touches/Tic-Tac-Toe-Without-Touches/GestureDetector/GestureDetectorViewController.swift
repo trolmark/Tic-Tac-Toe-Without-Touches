@@ -20,10 +20,13 @@ final class GestureDetectorViewController: UIViewController {
     public weak var delegate: GestureDetectorControllerDelegate?
     
     private var request: VNCoreMLRequest?
-    private var isInferencing = false
     private let semaphore = DispatchSemaphore(value: 1)
+    
+    private var isInferencing = false
+    private var showPrediction = false
+    
     private var previewPrediction: UIImageView = .init(frame: .zero)
-   
+    private var touchPointView: UIView = .init(frame: .init(x: 0, y: 0, width: 40, height: 40))
     private var videoCapture: VideoCapture!
    
     override func viewDidLoad() {
@@ -49,6 +52,11 @@ extension GestureDetectorViewController {
     
     func setUpUI() {
         self.view.backgroundColor = .white
+        self.view.addSubview(self.touchPointView)
+        self.touchPointView.layer.cornerRadius = self.touchPointView.frame.height * 0.5
+        self.touchPointView.backgroundColor = .red
+        self.touchPointView.isHidden = true
+        
         self.previewPrediction.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.previewPrediction)
         
@@ -56,7 +64,7 @@ extension GestureDetectorViewController {
             previewPrediction.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             previewPrediction.topAnchor.constraint(equalTo: view.topAnchor),
             previewPrediction.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            previewPrediction.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            previewPrediction.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -77,6 +85,10 @@ extension GestureDetectorViewController {
         videoCapture.fps = 30
         videoCapture.setUp(sessionPreset: .cif352x288) { success in
             if success {
+                if let previewLayer = self.videoCapture.previewLayer {
+                    self.view.layer.addSublayer(previewLayer)
+                    self.resizePreviewLayer()
+                }
                 self.videoCapture.start()
             }
         }
@@ -88,7 +100,11 @@ extension GestureDetectorViewController {
     }
     
     func resizePreviewLayer() {
-        self.view.bringSubviewToFront(previewPrediction)
+        videoCapture.previewLayer?.frame = view.bounds
+        if showPrediction {
+            self.view.bringSubviewToFront(previewPrediction)
+        }
+        self.view.bringSubviewToFront(self.touchPointView)
     }
 }
 
@@ -122,15 +138,28 @@ extension GestureDetectorViewController: VideoCaptureDelegate {
         }
 
         DispatchQueue.main.async {
-            self.previewPrediction.image = UIImage(ciImage: CIImage(cvPixelBuffer: observation.pixelBuffer))
-            guard let tipPoint = observation.pixelBuffer.topWhitePoint() else { return }
+            if self.showPrediction {
+                self.previewPrediction.image = UIImage(ciImage: CIImage(cvPixelBuffer: observation.pixelBuffer))
+            }
+            guard let tipPoint = observation.pixelBuffer.topWhitePoint() else {
+                self.touchPointView.isHidden = true
+                return
+            }
         
             let imageFingerPoint = VNImagePointForNormalizedPoint(
                 tipPoint,
                 Int(self.view.bounds.size.width), Int(self.view.bounds.size.height)
             )
             
+            self.showTouchPoint(at: imageFingerPoint)
             self.delegate?.gestureControllerDetectTap(atPoint: imageFingerPoint, gestureDetector: self)
+        }
+    }
+    
+    func showTouchPoint(at point: CGPoint) {
+        self.touchPointView.isHidden = false
+        UIView.animate(withDuration: 0.1) {
+            self.touchPointView.center = point
         }
     }
 }
