@@ -2,8 +2,9 @@
 
 Play in Tic-Tac-Toe game without touching screen
 
-![Preview](https://imgur.com/dj8JMJo.gif)
+![Preview](https://imgur.com/VF6cBkZ.gif)
 
 
-### Idea
-This is proof-of-concept, implementation of idea playing in Tic-Tac-Toe with gestures, without touching the screen.
+### About project
+This is proof-of-concept, implementation of idea playing in Tic-Tac-Toe with gestures, without touching the screen. 
+Basic idea is : find in video frame forefinger ( with segmentation model),  convert finger's position into position on the Tic-Tac-Toe board. 
